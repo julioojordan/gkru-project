@@ -1,0 +1,50 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gkru_app
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/db-dump.sql:/docker-entrypoint-initdb.d/db-dump.sql
+
+  backend:
+    build:
+      context: ./gkru-service
+      dockerfile: Dockerfile
+    container_name: gkru-service
+    restart: always
+    volumes:
+      - ./uploads:/app/uploads #agar file upload persistent meski pod dihapus
+    ports:
+      - "3001:3001"  # Port backend
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: gkru_app
+      PRIVATE_KEY_PATH: "/app/private.pem"
+
+  frontend:
+    build:
+      context: ./gkru-app
+      dockerfile: Dockerfile
+    container_name: gkru-app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_SERVICE_URL: "http://0.0.0.0:3001" #pastikan port 3001 sudah diekspos karena tidak bisa menggunakan nama container
+      NODE_ENV: "development" # ganti ke production untuk menjalankan server statis di FontEnd ya nanti
+
+volumes:
+  db_data:
