@@ -11,6 +11,8 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./db/db-dump.sql:/docker-entrypoint-initdb.d/db-dump.sql
+    networks:
+      - gkru_network
 
   backend:
     build:
@@ -31,6 +33,8 @@ services:
       DB_PASSWORD: root
       DB_NAME: gkru_app
       PRIVATE_KEY_PATH: "/app/private.pem"
+    networks:
+      - gkru_network
 
   frontend:
     build:
@@ -43,8 +47,14 @@ services:
     depends_on:
       - backend
     environment:
-      REACT_APP_SERVICE_URL: "http://0.0.0.0:3001" #pastikan port 3001 sudah diekspos karena tidak bisa menggunakan nama container
+      REACT_APP_SERVICE_URL: "http://localhost:3001" #pastikan port 3001 sudah diekspos karena tidak bisa menggunakan nama container
       NODE_ENV: "development" # ganti ke production untuk menjalankan server statis di FontEnd ya nanti
+    networks:
+      - gkru_network
 
 volumes:
   db_data:
+
+networks:
+  gkru_network:
+    driver: bridge
