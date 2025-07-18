@@ -14,11 +14,35 @@ services:
     networks:
       - gkru_network
 
+  # untuk Golang
+  # backend:
+  #   build:
+  #     context: ./gkru-service
+  #     dockerfile: Dockerfile
+  #   container_name: gkru-service
+  #   restart: always
+  #   volumes:
+  #     - ./uploads:/app/uploads #agar file upload persistent meski pod dihapus
+  #   ports:
+  #     - "3001:3001"  # Port backend
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     DB_HOST: db
+  #     DB_PORT: 3306
+  #     DB_USER: root
+  #     DB_PASSWORD: root
+  #     DB_NAME: gkru_app
+  #     PRIVATE_KEY_PATH: "/app/private.pem"
+  #   networks:
+  #     - gkru_network
+
+  # untuk Node Js
   backend:
     build:
-      context: ./gkru-service
+      context: ./gkru-service-nodeJs
       dockerfile: Dockerfile
-    container_name: gkru-service
+    container_name: gkru-service-nodeJs
     restart: always
     volumes:
       - ./uploads:/app/uploads #agar file upload persistent meski pod dihapus

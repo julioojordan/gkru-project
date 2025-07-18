@@ -1,6 +1,6 @@
 # Set variabel untuk repositori
 $FE_REPO = "https://github.com/julioojordan/gkru-app.git"
-$BE_REPO = "https://github.com/julioojordan/gkru-service.git"
+$BE_REPO = "https://github.com/julioojordan/gkru-service-nodeJs.git"
 
 # Hapus folder lama jika ada
 Write-Host "Menghapus folder lama..."
